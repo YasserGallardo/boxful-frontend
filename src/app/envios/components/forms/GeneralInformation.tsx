@@ -12,7 +12,7 @@ export default function GeneralInformation() {
                 <Col span={18}>
                     <Form.Item
                         label="📍Dirección de recolección"
-                        name="direccion_recoleccion"
+                        name="direccionEnvio"
                         rules={[{ required: true, message: "Ingrese la dirección de recolección" }]}
                     >
                         <Input />
@@ -21,7 +21,7 @@ export default function GeneralInformation() {
                 <Col span={6}>
                     <Form.Item
                         label="📆 Fecha programada"
-                        name="fecha_programada"
+                        name="fechaProgramada"
                         rules={[{ required: true, message: "Seleccione la fecha programada" }]}
                     >
                         <DatePicker
@@ -46,7 +46,7 @@ export default function GeneralInformation() {
                 <Col span={8}>
                     <Form.Item
                         label="Apellidos"
-                        name="apellidos"
+                        name="apellido"
                         rules={[{ required: true, message: "Ingrese sus apellidos" }]}
                     >
                         <Input />
@@ -83,7 +83,7 @@ export default function GeneralInformation() {
                 <Col span={18}>
                     <Form.Item
                         label="📮Dirección de destinatario"
-                        name="direccion_destinatario"
+                        name="direccion"
                         rules={[{ required: true, message: "Ingrese la dirección del destinatario" }]}
                     >
                         <Input />
@@ -122,7 +122,7 @@ export default function GeneralInformation() {
                 <Col span={8}>
                     <Form.Item
                         label="Punto de referencia"
-                        name="punto_referencia"
+                        name="puntoReferencia"
                     >
                         <Input />
                     </Form.Item>
