@@ -1,4 +1,4 @@
-import "antd/dist/reset.css";
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 import "./globals.css";
 import { Albert_Sans } from "next/font/google";
 
@@ -13,7 +13,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${albertSans.className} antialiased`}>
-        {children}
+        <AntdRegistry >
+          {children}
+        </AntdRegistry>
       </body>
     </html>
   );

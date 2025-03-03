@@ -1,3 +1,4 @@
+"use client";
 import { Card, Flex, Input, Button, Typography, Space } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Image from "next/image";
