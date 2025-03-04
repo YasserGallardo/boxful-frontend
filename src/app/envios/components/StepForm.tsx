@@ -5,6 +5,7 @@ import { Steps, Button, Form, message, Row, Col } from "antd";
 import GeneralInformation from "./forms/GeneralInformation";
 import PackagesList from "./forms/PackagesList";
 import { sendOrder } from "../api/apiService";
+import { CheckOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const steps = [
     { component: <GeneralInformation /> },
@@ -52,7 +53,7 @@ export default function StepForm() {
                 form={form}
                 layout="vertical"
                 initialValues={formData}
-                style={{ marginTop: 24 }}
+                style={{ marginTop: 0 }}
             >
                 {steps[current].component}
 
@@ -66,16 +67,16 @@ export default function StepForm() {
 
                     <Col>
                         {current > 0 && (
-                            <Button style={{ marginRight: 8 }} onClick={prev}>
+                            <Button style={{ marginRight: 8 }} onClick={prev} icon={<LeftOutlined />} iconPosition="start">
                                 Anterior
                             </Button>
                         )}
                         {current < steps.length - 1 ? (
-                            <Button type="primary" onClick={next}>
+                            <Button type="primary" onClick={next} icon={<RightOutlined />} iconPosition="end">
                                 Siguiente
                             </Button>
                         ) : (
-                            <Button type="primary" onClick={handleFinish}>
+                            <Button type="primary" onClick={handleFinish} icon={<CheckOutlined />} iconPosition="end">
                                 Crear orden
                             </Button>
                         )}

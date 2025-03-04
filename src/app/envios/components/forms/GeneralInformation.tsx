@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, DatePicker, Row, Col, Select, Space } from "antd";
+import { Form, Input, DatePicker, Row, Col, Select } from "antd";
 
 const { Option } = Select;
 
@@ -27,6 +27,7 @@ export default function GeneralInformation() {
                         <DatePicker
                             format="DD/MM/YYYY"
                             style={{ width: "100%" }}
+                            placeholder=""
                         />
                     </Form.Item>
                 </Col>
@@ -74,10 +75,8 @@ export default function GeneralInformation() {
                         name="telefono"
                         rules={[{ required: true, message: "Ingrese su teléfono" }]}
                     >
-                        <Space.Compact>
-                            <Select defaultValue="+503" options={[]} />
-                            <Input />
-                        </Space.Compact>
+                        <Input addonBefore={<Select defaultValue="+503" options={[{ value: "+503", label: "+503" }]} />} />
+
                     </Form.Item>
                 </Col>
                 <Col span={18}>
@@ -99,7 +98,7 @@ export default function GeneralInformation() {
                         name="departamento"
                         rules={[{ required: true, message: "Seleccione el departamento" }]}
                     >
-                        <Select placeholder="Seleccione un departamento">
+                        <Select placeholder="">
                             <Option value="san_salvador">San Salvador</Option>
                             <Option value="la_libertad">La Libertad</Option>
                             <Option value="santa_ana">Santa Ana</Option>
@@ -112,7 +111,7 @@ export default function GeneralInformation() {
                         name="municipio"
                         rules={[{ required: true, message: "Seleccione el municipio" }]}
                     >
-                        <Select placeholder="Seleccione un municipio">
+                        <Select placeholder="">
                             <Option value="antiguo_cuscatlan">Antiguo Cuscatlán</Option>
                             <Option value="santa_tecla">Santa Tecla</Option>
                             <Option value="soyapango">Soyapango</Option>
