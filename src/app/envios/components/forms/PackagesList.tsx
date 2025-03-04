@@ -90,41 +90,44 @@ export default function PackagesList() {
                         </Row>
                     </Card>
 
+                    {fields.length > 0 && (
 
-                    <Typography.Title level={5}>Bultos agregados</Typography.Title>
-                    {fields.map(({ key, name, ...restField }) => (
-                        <Card style={{ marginBottom: 10, backgroundColor: "#F3F5F9" }} key={key}>
-                            <Flex key={key} align="center" style={{ width: "100%", marginBottom: 8 }} justify="space-between">
-                                <Form.Item {...restField} name={[name, "largo"]} label="Largo">
-                                    <Input addonAfter="cm" placeholder="Largo" style={{ width: "100%" }} />
-                                </Form.Item>
+                        <>
+                            <Typography.Title level={5}>Bultos agregados</Typography.Title>
+                            {fields.map(({ key, name, ...restField }) => (
+                                <Card style={{ marginBottom: 10, backgroundColor: "#F3F5F9" }} key={key}>
+                                    <Flex key={key} align="center" style={{ width: "100%", marginBottom: 8 }} justify="space-between">
+                                        <Form.Item {...restField} name={[name, "largo"]} label="Largo">
+                                            <Input addonAfter="cm" placeholder="Largo" style={{ width: "100%" }} />
+                                        </Form.Item>
 
-                                <Form.Item {...restField} name={[name, "alto"]} label="Alto">
-                                    <Input addonAfter="cm" placeholder="Alto" style={{ width: "100%" }} />
-                                </Form.Item>
+                                        <Form.Item {...restField} name={[name, "alto"]} label="Alto">
+                                            <Input addonAfter="cm" placeholder="Alto" style={{ width: "100%" }} />
+                                        </Form.Item>
 
-                                <Form.Item {...restField} name={[name, "ancho"]} label="Ancho">
-                                    <Input addonAfter="cm" placeholder="Ancho" style={{ width: "100%" }} />
-                                </Form.Item>
+                                        <Form.Item {...restField} name={[name, "ancho"]} label="Ancho">
+                                            <Input addonAfter="cm" placeholder="Ancho" style={{ width: "100%" }} />
+                                        </Form.Item>
 
-                                <Form.Item {...restField} name={[name, "peso"]} label="Peso">
-                                    <Input addonAfter="lb" placeholder="Peso" style={{ width: "100%" }} />
-                                </Form.Item>
+                                        <Form.Item {...restField} name={[name, "peso"]} label="Peso">
+                                            <Input addonAfter="lb" placeholder="Peso" style={{ width: "100%" }} />
+                                        </Form.Item>
 
-                                <Form.Item {...restField} name={[name, "contenido"]} label="Contenido">
-                                    <Input placeholder="Contenido" style={{ width: "100%" }} />
-                                </Form.Item>
-
-
-                            </Flex>
-                            <Row justify="end">
-                                <Button type="primary" ghost danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
-
-                            </Row>
-                        </Card>
-                    ))}
+                                        <Form.Item {...restField} name={[name, "contenido"]} label="Contenido">
+                                            <Input placeholder="Contenido" style={{ width: "100%" }} />
+                                        </Form.Item>
 
 
+                                    </Flex>
+                                    <Row justify="end">
+                                        <Button type="primary" ghost danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
+
+                                    </Row>
+                                </Card>
+                            ))}
+
+                        </>
+                    )}
                 </>
             )}
         </Form.List>

@@ -65,10 +65,7 @@ export const authOptions: NextAuthOptions = {
       if (new Date().getTime() < token.backendTokens.expiresIn)
         return token;
 
-      if (new Date().getTime() > token.backendTokens.expiresIn) {
-        return await refreshToken(token);
-      }
-      return token;
+      return await refreshToken(token);
     },
 
     async session({ token, session }) {

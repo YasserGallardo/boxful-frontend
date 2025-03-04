@@ -72,11 +72,11 @@ export default function StepForm() {
                             </Button>
                         )}
                         {current < steps.length - 1 ? (
-                            <Button type="primary" onClick={next} icon={<RightOutlined />} iconPosition="end">
+                            <Button type="primary" onClick={next} icon={<RightOutlined />} iconPosition="end" style={{ backgroundColor: "#FF4300", borderColor: "#FF4300" }}>
                                 Siguiente
                             </Button>
                         ) : (
-                            <Button type="primary" onClick={handleFinish} icon={<CheckOutlined />} iconPosition="end">
+                            <Button type="primary" onClick={handleFinish} icon={<CheckOutlined />} iconPosition="end" style={{ backgroundColor: "#FF4300", borderColor: "#FF4300" }}>
                                 Crear orden
                             </Button>
                         )}

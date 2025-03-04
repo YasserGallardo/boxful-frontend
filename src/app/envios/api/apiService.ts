@@ -1,5 +1,7 @@
 import { config } from "../../../../config";
 import axios from "axios";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 
 export async function sendOrder(data: unknown) {
     try {
@@ -13,3 +15,4 @@ export async function sendOrder(data: unknown) {
         throw error;
     }
 }
+
