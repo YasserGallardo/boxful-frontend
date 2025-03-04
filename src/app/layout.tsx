@@ -1,6 +1,7 @@
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import "./globals.css";
 import { Albert_Sans } from "next/font/google";
+import Providers from '@/components/Providers';
 
 const albertSans = Albert_Sans({
   subsets: ["latin"],
@@ -13,9 +14,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${albertSans.className} antialiased`}>
-        <AntdRegistry >
-          {children}
-        </AntdRegistry>
+        <Providers>
+          <AntdRegistry >
+            {children}
+          </AntdRegistry>
+        </Providers>
       </body>
     </html>
   );
