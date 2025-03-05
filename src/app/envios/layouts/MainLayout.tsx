@@ -3,6 +3,7 @@
 import { Layout, Button } from "antd";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
+import { RollbackOutlined } from "@ant-design/icons";
 
 const { Header, Content } = Layout;
 
@@ -29,7 +30,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <Button type="primary" ghost href="/" style={{ borderColor: "#FF4300", color: "#FF4300" }}>
                     Sobre Yasser 😎
                 </Button>
-                <Button type="primary" danger onClick={() => signOut({ callbackUrl: "/login" })}>
+                <Button type="primary" danger onClick={() => signOut({ callbackUrl: "/login" })} icon={<RollbackOutlined />}>
                     Cerrar Sesión
                 </Button>
             </Header>

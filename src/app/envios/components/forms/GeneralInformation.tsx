@@ -57,7 +57,7 @@ export default function GeneralInformation({ form, setNombreDepartamento }: { fo
                 </Col>
                 <Col span={6}>
                     <Form.Item label="📆 Fecha programada" name="fechaProgramada" rules={[{ required: true, message: "Seleccione la fecha programada" }]}>
-                        <DatePicker format="DD/MM/YYYY" style={{ width: "100%" }} />
+                        <DatePicker format="DD/MM/YYYY" style={{ width: "100%" }} placeholder="" />
                     </Form.Item>
                 </Col>
             </Row>
