@@ -22,10 +22,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                     padding: "0 20px",
                 }}
             >
-                {/* Logo */}
+
                 <Image src="/boxful.gif" alt="Login" width={50} height={50} />
 
-                {/* Botón de Cerrar Sesión */}
+
+                <Button type="primary" variant="solid" href="/" >
+                    Sobre Yasser 😎
+                </Button>
                 <Button type="primary" danger onClick={() => signOut({ callbackUrl: "/login" })}>
                     Cerrar Sesión
                 </Button>

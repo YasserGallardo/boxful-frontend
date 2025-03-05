@@ -44,7 +44,7 @@ export default function Login() {
                 <Space direction="vertical" style={{ width: "100%", marginTop: "20px" }}>
                     <Input
                         size="large"
-                        placeholder="Usuario"
+                        placeholder="Email"
                         prefix={<UserOutlined />}
                         name="username"
                         value={credentials.username}
@@ -68,6 +68,9 @@ export default function Login() {
                         Iniciar sesión
                     </Button>
                 </Space>
+                <Typography.Text style={{ marginTop: 10, display: "block" }}>
+                    ¿No tienes una cuenta? <a href="/register">Regístrate</a>
+                </Typography.Text>
             </Card>
         </Flex>
     );
