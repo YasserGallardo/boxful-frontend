@@ -1,17 +1,12 @@
 "use client";
-import { useSession, signIn, signOut } from 'next-auth/react'
-import { Form, Input, DatePicker, Row, Col, Select } from "antd";
+import { useSession } from 'next-auth/react'
+import { Form, Input, DatePicker, Row, Col, Select, FormInstance } from "antd";
 import { useEffect, useState } from "react";
 import { config } from "../../../../../config";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import axios from 'axios';
 
-const { Option } = Select;
 
-export default function GeneralInformation() {
-    const { data: session } = useSession();
-    console.log(session);
+export default function GeneralInformation({ form, setNombreDepartamento }: { form: FormInstance, setNombreDepartamento: Function }) {
     const [paises, setPaises] = useState([]);
     const [departamentos, setDepartamentos] = useState([]);
     const [municipios, setMunicipios] = useState([]);
@@ -22,37 +17,41 @@ export default function GeneralInformation() {
     useEffect(() => {
         const fetchSessionAndCountries = async () => {
             try {
-                setLoading({ ...loading, paises: true });
-                const response = await axios.get(`${config.API_URL}/external/countries`);
-                setPaises(response.data.data);
+                setLoading({ ...loading, paises: true, departamentos: true });
+                const [countriesResponse, departamentsResponse] = await Promise.all([
+                    axios.get(`${config.API_URL}/external/countries`),
+                    axios.get(`${config.API_URL}/external/departamentos`),
+                ]);
+                setPaises(countriesResponse.data.data);
+                setDepartamentos(departamentsResponse.data.data);
 
-                setLoading({ ...loading, paises: false });
+                setLoading({ ...loading, paises: false, departamentos: false });
             } catch (error) {
                 console.error("Error:", error);
-                setLoading({ ...loading, paises: false });
+                setLoading({ ...loading, paises: false, departamentos: false });
             }
         };
 
         fetchSessionAndCountries();
     }, []);
-    useEffect(() => {
-        const fetchDepartaments = async () => {
-            try {
-                setLoading({ ...loading, departamentos: true });
-                const response = await axios.get(`${config.API_URL}/external/departamentos`);
-                setDepartamentos(response.data.data);
+    const handleDepartamentoChange = async (value) => {
+        try {
+            form.setFieldsValue({ municipio: undefined });
+            setDepartamentoSelected(value);
+            setLoading({ ...loading, municipios: true });
 
-                setLoading({ ...loading, departamentos: false });
-            } catch (error) {
-                console.error("Error:", error);
-                setLoading({ ...loading, departamentos: false });
-            }
-        };
+            const response = await axios.get(`${config.API_URL}/external/municipios/${value}`);
+            setMunicipios(response.data.data);
 
-        fetchDepartaments();
+            const departamento = departamentos.find((dep) => dep.codigo === value);
+            setNombreDepartamento(departamento ? departamento.nombre : '');
 
-
-    }, []);
+            setLoading({ ...loading, municipios: false });
+        } catch (error) {
+            console.error("Error:", error);
+            setLoading({ ...loading, municipios: false });
+        }
+    }
 
 
     return (
@@ -116,7 +115,10 @@ export default function GeneralInformation() {
                     <Form.Item
                         label="Teléfono"
                         name="telefono"
-                        rules={[{ required: true, message: "Ingrese su teléfono" }]}
+                        rules={[
+                            { required: true, message: "Ingrese su teléfono" },
+                            { pattern: new RegExp(/^\d{8}$/), message: "Ingrese un teléfono válido de 8 dígitos" },
+                        ]}
 
                     >
                         <Input
@@ -188,8 +190,8 @@ export default function GeneralInformation() {
                         name="departamento"
                         rules={[{ required: true, message: "Seleccione el departamento" }]}
                     >
-                        <Select placeholder="" options={departamentos ? departamentos.map((departamento) => ({ value: departamento.codigo, label: departamento.nombre })) : []}>
-                        </Select>
+                        <Select placeholder="" onChange={handleDepartamentoChange} options={departamentos ? departamentos.map((departamento) => ({ value: departamento.codigo, label: departamento.nombre })) : []} loading={loading.departamentos} disabled={loading.departamentos} />
+
                     </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -198,11 +200,8 @@ export default function GeneralInformation() {
                         name="municipio"
                         rules={[{ required: true, message: "Seleccione el municipio" }]}
                     >
-                        <Select placeholder="">
-                            <Option value="antiguo_cuscatlan">Antiguo Cuscatlán</Option>
-                            <Option value="santa_tecla">Santa Tecla</Option>
-                            <Option value="soyapango">Soyapango</Option>
-                        </Select>
+                        <Select placeholder="" disabled={!departamentoSelected || loading.municipios} options={municipios ? municipios.map((municipio) => ({ value: municipio.nombre, label: municipio.nombre })) : []} loading={loading.municipios} />
+
                     </Form.Item>
                 </Col>
                 <Col span={8}>

@@ -1,12 +1,20 @@
-import { config } from "../../../../config";
 import axios from "axios";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
+import { config } from "../../../../config";
+import { notification } from "antd";
 
-export async function sendOrder(data: unknown) {
+export async function sendOrder(data: unknown, token: string) {
     try {
-        const response = await axios.post(`${config.API_URL}/envios`, data);
 
+        const response = await axios.post(`${config.API_URL}/envios`, data, {
+            withCredentials: true,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        notification.success({
+            message: "Enviado",
+            description: "El pedido se ha enviado con exito",
+        })
         if (!response.data) throw new Error("Error en la solicitud");
 
         return response.data;
@@ -15,4 +23,3 @@ export async function sendOrder(data: unknown) {
         throw error;
     }
 }
-

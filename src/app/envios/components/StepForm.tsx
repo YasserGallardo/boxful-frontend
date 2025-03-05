@@ -1,21 +1,26 @@
 "use client";
-
+import DOMPurify from "dompurify";
 import { useState } from "react";
-import { Steps, Button, Form, message, Row, Col } from "antd";
+import { Steps, Button, Form, message, Row, Col, Result } from "antd";
 import GeneralInformation from "./forms/GeneralInformation";
 import PackagesList from "./forms/PackagesList";
 import { sendOrder } from "../api/apiService";
 import { CheckOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
-
-const steps = [
-    { component: <GeneralInformation /> },
-    { component: <PackagesList /> },
-];
+import { useSession } from "next-auth/react";
 
 export default function StepForm() {
+    const { data: session } = useSession();
     const [current, setCurrent] = useState(0);
     const [form] = Form.useForm();
     const [formData, setFormData] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [departamentoSelected, setDepartamentoSelected] = useState(null);
+    const [orderCreated, setOrderCreated] = useState(false);
+
+    const steps = [
+        { component: <GeneralInformation form={form} setNombreDepartamento={setDepartamentoSelected} /> },
+        { component: <PackagesList /> },
+    ];
 
     const next = async () => {
         try {
@@ -35,54 +40,89 @@ export default function StepForm() {
     const handleFinish = async () => {
         try {
             const values = await form.validateFields();
-            const finalData = { ...formData, ...values };
+            setLoading(true);
+            values.departamento = departamentoSelected;
+            const sanitizedValues = Object.fromEntries(
+                Object.entries(values).map(([key, value]) =>
+                    key !== "paquetes"
+                        ? [key, DOMPurify.sanitize(value, { allowedAttributes: [], allowedTags: [] })]
+                        : [key, value]
+                )
+            );
+            const paquetes = sanitizedValues.paquetes.map((paquete) => ({
+                ...Object.fromEntries(
+                    Object.entries(paquete).map(([key, value]) => [
+                        key,
+                        key !== "contenido" && typeof value === "string" ? parseInt(value, 10) : value,
+                    ])
+                ),
+            }));
+            sanitizedValues.paquetes = paquetes;
+            const finalData = { ...formData, ...sanitizedValues };
 
-            console.log("Datos enviados:", finalData);
-            await sendOrder(finalData);
+            await sendOrder(finalData, session?.backendTokens.accessToken);
+            setLoading(false);
+            setOrderCreated(true);
 
-            message.success("¡Orden creada con éxito!");
         } catch (error) {
-            console.error("Error al enviar la orden:", error);
             message.error("Hubo un problema al crear la orden");
+            setLoading(false);
         }
     };
 
+    const handleCreateNewOrder = () => {
+        setOrderCreated(false);
+        setFormData({});
+        form.resetFields();
+        setCurrent(0);
+    };
+
+    if (orderCreated) {
+        return (
+            <Result
+                status="success"
+                title="¡Orden creada exitosamente!"
+                subTitle="Tu pedido ha sido creado correctamente."
+                extra={[
+                    <Button type="primary" onClick={handleCreateNewOrder}>
+                        Crear nueva orden
+                    </Button>,
+                ]}
+            />
+        );
+    }
+
     return (
-        <>
-            <Form
-                form={form}
-                layout="vertical"
-                initialValues={formData}
-                style={{ marginTop: 0 }}
-            >
-                {steps[current].component}
+        <Form
+            form={form}
+            layout="vertical"
+            initialValues={formData}
+            style={{ marginTop: 0 }}
+        >
+            {steps[current].component}
 
+            <Row style={{ marginTop: 24 }} justify="space-between" align="middle">
+                <Col flex="auto" style={{ textAlign: "center" }}>
+                    <Steps size="small" current={current} responsive={false} />
+                </Col>
 
-                <Row style={{ marginTop: 24 }} justify="space-between" align="middle">
-
-                    <Col flex="auto" style={{ textAlign: "center" }}>
-                        <Steps size="small" current={current} responsive={false} />
-                    </Col>
-
-
-                    <Col>
-                        {current > 0 && (
-                            <Button style={{ marginRight: 8 }} onClick={prev} icon={<LeftOutlined />} iconPosition="start">
-                                Anterior
-                            </Button>
-                        )}
-                        {current < steps.length - 1 ? (
-                            <Button type="primary" onClick={next} icon={<RightOutlined />} iconPosition="end" style={{ backgroundColor: "#FF4300", borderColor: "#FF4300" }}>
-                                Siguiente
-                            </Button>
-                        ) : (
-                            <Button type="primary" onClick={handleFinish} icon={<CheckOutlined />} iconPosition="end" style={{ backgroundColor: "#FF4300", borderColor: "#FF4300" }}>
-                                Crear orden
-                            </Button>
-                        )}
-                    </Col>
-                </Row>
-            </Form>
-        </>
+                <Col>
+                    {current > 0 && (
+                        <Button style={{ marginRight: 8 }} onClick={prev} icon={<LeftOutlined />} iconPosition="start">
+                            Anterior
+                        </Button>
+                    )}
+                    {current < steps.length - 1 ? (
+                        <Button type="primary" onClick={next} icon={<RightOutlined />} iconPosition="end" style={{ backgroundColor: "#FF4300", borderColor: "#FF4300" }}>
+                            Siguiente
+                        </Button>
+                    ) : (
+                        <Button type="primary" loading={loading} onClick={handleFinish} icon={<CheckOutlined />} iconPosition="end" style={{ backgroundColor: "#FF4300", borderColor: "#FF4300" }}>
+                            Crear orden
+                        </Button>
+                    )}
+                </Col>
+            </Row>
+        </Form>
     );
 }
