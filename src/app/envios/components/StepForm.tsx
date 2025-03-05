@@ -5,7 +5,7 @@ import { Steps, Button, Form, message, Row, Col, Result } from "antd";
 import GeneralInformation from "./forms/GeneralInformation";
 import PackagesList from "./forms/PackagesList";
 import { sendOrder } from "../api/apiService";
-import { CheckOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { CheckOutlined, LeftOutlined, PlusCircleOutlined, RightOutlined } from "@ant-design/icons";
 import { useSession } from "next-auth/react";
 
 export default function StepForm() {
@@ -84,7 +84,7 @@ export default function StepForm() {
                 title="¡Orden creada exitosamente!"
                 subTitle="Tu pedido ha sido creado correctamente."
                 extra={[
-                    <Button type="primary" onClick={handleCreateNewOrder}>
+                    <Button type="primary" onClick={handleCreateNewOrder} icon={<PlusCircleOutlined />} style={{ backgroundColor: "#FF4300", borderColor: "#FF4300" }}>
                         Crear nueva orden
                     </Button>,
                 ]}

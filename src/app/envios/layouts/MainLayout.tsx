@@ -26,7 +26,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <Image src="/boxful.gif" alt="Login" width={50} height={50} />
 
 
-                <Button type="primary" variant="solid" href="/" >
+                <Button type="primary" ghost href="/" style={{ borderColor: "#FF4300", color: "#FF4300" }}>
                     Sobre Yasser 😎
                 </Button>
                 <Button type="primary" danger onClick={() => signOut({ callbackUrl: "/login" })}>
