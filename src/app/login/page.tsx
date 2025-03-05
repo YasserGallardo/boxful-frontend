@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import DOMPurify from "dompurify";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Card, Flex, Input, Button, Typography, Space, message } from "antd";
@@ -17,10 +18,15 @@ export default function Login() {
 
     const handleSubmit = async () => {
         setLoading(true);
+        const sanitizedCredentials = {
+            username: DOMPurify.sanitize(credentials.username, { ALLOWED_ATTR: [], ALLOWED_TAGS: [] }),
+            password: DOMPurify.sanitize(credentials.password, { ALLOWED_ATTR: [], ALLOWED_TAGS: [] }),
+        };
+
         const result = await signIn("credentials", {
-            redirect: false, // Evita redirección automática
-            username: credentials.username,
-            password: credentials.password,
+            redirect: false,
+            username: sanitizedCredentials.username,
+            password: sanitizedCredentials.password,
         });
 
         if (result?.error) {
